@@ -10,12 +10,13 @@ function Buttons(props) {
     const handleOpenImportPlainTextDialog = () => setIsImportPlainTextDialogOpen(!isImportPlainTextDialogOpen);
     const handleOpenImportCipherTextDialog = () => setIsImportCipherTextDialogOpen(!isImportCipherTextDialogOpen);
 
-    const uploadText = async (e, onLoadHandler) => {
+    const uploadText = async (e, onClickHandler, onChangeHandler) => {
         e.preventDefault();
         const reader = new FileReader();
         reader.onload = async (e) => {
             const text = (e.target.result);
-            onLoadHandler(text);
+            onChangeHandler(text);
+            onClickHandler();
         };
         reader.readAsText(e.target.files[0]);
     }
@@ -39,7 +40,7 @@ function Buttons(props) {
                                     className="font-semibold">Click to upload</span> or drag and drop</p>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">TXT</p>
                             </div>
-                            <input id="dropzone-file" type="file" className="hidden" onChange={(e) => uploadText(e, onChangeHandler)} />
+                            <input id="dropzone-file" type="file" className="hidden" onChange={(e) => uploadText(e, onClickHandler, onChangeHandler)} />
                         </label>
                     </div>
                 </DialogBody>
@@ -56,7 +57,7 @@ function Buttons(props) {
                 <Button>export json</Button>
             </ButtonGroup>
             <ButtonGroup color="green" className="mx-auto">
-                <Button>merge cells</Button>
+                <Button onClick={props.handleMergeCells}>merge cells</Button>
                 <Button>split cells</Button>
                 <Button>shift right</Button>
                 <Button>shift left</Button>

@@ -1,17 +1,23 @@
 import Header from "./Header";
 import Buttons from "./Buttons";
 import Main from "./Main";
-import {useState} from "react";
+import {useRef, useState} from "react";
 
-function App() {
+const App = () => {
+  const ref = useRef();
+
   const [plainText, setPlainText] = useState(false);
   const [cipherText, setCipherText] = useState(false);
 
+  const handleMergeCells = () => {
+    ref.current.mergeCells();
+  }
+
   return (<>
     <Header />
-    <Buttons setPlainText={setPlainText} setCipherText={setCipherText} />
+    <Buttons setPlainText={setPlainText} setCipherText={setCipherText} handleMergeCells={handleMergeCells} />
 
-    <Main plainText={plainText} cipherText={cipherText} />
+    <Main ref={ref} isJson={false} data={{plainText, cipherText}}  />
   </>);
 }
 
