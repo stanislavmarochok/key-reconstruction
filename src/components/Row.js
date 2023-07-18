@@ -54,17 +54,27 @@ const Row = forwardRef((props, ref) => {
     const mergeCells = () => {
         let _row =  JSON.parse(JSON.stringify(row));
         let _selectedPlainTextCells = JSON.parse(JSON.stringify(selectedPlainTextCells));
+        let _selectedCipherTextCells = JSON.parse(JSON.stringify(selectedCipherTextCells));
         if (_row.length <= 1) {
             return;
         }
 
         // first merge plain text cells
+        mergeRowCells(_row, _selectedPlainTextCells, 'plainText');
+        mergeRowCells(_row, _selectedCipherTextCells, 'cipherText');
+
+        setRow(_row);
+        setSelectedPlainTextCells(_selectedPlainTextCells);
+        setSelectedCipherTextCells(_selectedCipherTextCells);
+    }
+
+    const mergeRowCells = (_row, _selectedTextCells, text) => {
         let idx = 0;
         while (true){
             if (idx >= _row.length)
                 break;
 
-            if (!_selectedPlainTextCells.includes(idx)){
+            if (!_selectedTextCells.includes(idx)){
                 idx++;
                 continue;
             }
@@ -72,28 +82,25 @@ const Row = forwardRef((props, ref) => {
             let cell1 = _row[idx];
             let idx2 = idx + 1;
             while (true){
-                if (!_selectedPlainTextCells.includes(idx2)){
+                if (!_selectedTextCells.includes(idx2)){
                     idx = idx2 + 1;
                     break;
                 }
 
                 // merge cells 1 and 2
                 let cell2 = _row[idx2];
-                cell1.plainText += cell2.plainText;
+                cell1[text] += cell2[text];
                 for (let i = idx2; i < _row.length - 1; i++)
-                    _row[i].plainText = _row[i + 1].plainText;
+                    _row[i][text] = _row[i + 1][text];
 
-                _row[_row.length - 1].plainText = false;
+                _row[_row.length - 1][text] = false;
 
-                for (let i = 0; i < _selectedPlainTextCells.length; i++){
-                    if (_selectedPlainTextCells[i] > idx)
-                        _selectedPlainTextCells[i] -= 1;
+                for (let i = 0; i < _selectedTextCells.length; i++){
+                    if (_selectedTextCells[i] > idx)
+                        _selectedTextCells[i] -= 1;
                 }
             }
         }
-
-        setRow(_row);
-        setSelectedPlainTextCells(_selectedPlainTextCells);
     }
 
     return (<>
