@@ -14,6 +14,11 @@ const Rows = forwardRef((props, ref) => {
             for (let i = 0; i < rowsRef.current.length; i++){
                 rowsRef.current[i].mergeCells();
             }
+        },
+        splitCells() {
+            for (let i = 0; i < rowsRef.current.length; i++){
+                rowsRef.current[i].splitCells();
+            }
         }
     }));
 

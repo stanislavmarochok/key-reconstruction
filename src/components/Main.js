@@ -8,10 +8,10 @@ const Main = forwardRef((props, ref) => {
 
     useImperativeHandle(ref, () => ({
         mergeCells() {
-            console.log('cells merged');
-            console.log(rows);
-            // const rowsWithMergedCells = mergeSelectedCells(rows);
             _ref.current.mergeCells();
+        },
+        splitCells() {
+            _ref.current.splitCells();
         }
     }));
 

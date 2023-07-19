@@ -1,5 +1,6 @@
 import {forwardRef, useEffect, useImperativeHandle, useState} from "react";
 import TextCell from "./TextCell";
+import {mergeCellsF, splitCellsF} from "../functions/cells";
 
 const Row = forwardRef((props, ref) => {
     const [row, setRow] = useState(props.data);
@@ -9,6 +10,9 @@ const Row = forwardRef((props, ref) => {
     useImperativeHandle(ref, () => ({
         mergeCells() {
             mergeCells();
+        },
+        splitCells() {
+            splitCells();
         }
     }));
 
@@ -52,56 +56,28 @@ const Row = forwardRef((props, ref) => {
     }
 
     const mergeCells = () => {
-        let _row =  JSON.parse(JSON.stringify(row));
-        let _selectedPlainTextCells = JSON.parse(JSON.stringify(selectedPlainTextCells));
-        let _selectedCipherTextCells = JSON.parse(JSON.stringify(selectedCipherTextCells));
-        if (_row.length <= 1) {
+        let result = mergeCellsF(row, selectedPlainTextCells, selectedCipherTextCells);
+        if (!result){
+            console.log('merge failed');
             return;
         }
 
-        // first merge plain text cells
-        mergeRowCells(_row, _selectedPlainTextCells, 'plainText');
-        mergeRowCells(_row, _selectedCipherTextCells, 'cipherText');
+        setRow(result.row);
+        setSelectedPlainTextCells(result.selectedPlainTextCells);
+        setSelectedCipherTextCells(result.selectedCipherTextCells);
+    };
 
-        setRow(_row);
-        setSelectedPlainTextCells(_selectedPlainTextCells);
-        setSelectedCipherTextCells(_selectedCipherTextCells);
-    }
-
-    const mergeRowCells = (_row, _selectedTextCells, text) => {
-        let idx = 0;
-        while (true){
-            if (idx >= _row.length)
-                break;
-
-            if (!_selectedTextCells.includes(idx)){
-                idx++;
-                continue;
-            }
-
-            let cell1 = _row[idx];
-            let idx2 = idx + 1;
-            while (true){
-                if (!_selectedTextCells.includes(idx2)){
-                    idx = idx2 + 1;
-                    break;
-                }
-
-                // merge cells 1 and 2
-                let cell2 = _row[idx2];
-                cell1[text] += cell2[text];
-                for (let i = idx2; i < _row.length - 1; i++)
-                    _row[i][text] = _row[i + 1][text];
-
-                _row[_row.length - 1][text] = false;
-
-                for (let i = 0; i < _selectedTextCells.length; i++){
-                    if (_selectedTextCells[i] > idx)
-                        _selectedTextCells[i] -= 1;
-                }
-            }
+    const splitCells = () => {
+        let result = splitCellsF(row, selectedPlainTextCells, selectedCipherTextCells);
+        if (!result){
+            console.log('merge failed');
+            return;
         }
-    }
+
+        setRow(result.row);
+        setSelectedPlainTextCells(result.selectedPlainTextCells);
+        setSelectedCipherTextCells(result.selectedCipherTextCells);
+    };
 
     return (<>
         <div className="mt-2">

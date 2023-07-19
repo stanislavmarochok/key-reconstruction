@@ -70,7 +70,7 @@ function Buttons(props) {
             </ButtonGroup>
             <ButtonGroup color="green" className="mx-auto">
                 <Button onClick={props.handleMergeCells}>merge cells</Button>
-                <Button>split cells</Button>
+                <Button onClick={props.handleSplitCells}>split cells</Button>
                 <Button>shift right</Button>
                 <Button>shift left</Button>
             </ButtonGroup>

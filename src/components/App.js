@@ -13,9 +13,13 @@ const App = () => {
     ref.current.mergeCells();
   }
 
+  const handleSplitCells = () => {
+    ref.current.splitCells();
+  }
+
   return (<>
     <Header />
-    <Buttons setPlainText={setPlainText} setCipherText={setCipherText} handleMergeCells={handleMergeCells} />
+    <Buttons setPlainText={setPlainText} setCipherText={setCipherText} handleMergeCells={handleMergeCells} handleSplitCells={handleSplitCells} />
 
     <Main ref={ref} isJson={false} data={{plainText, cipherText}}  />
   </>);
