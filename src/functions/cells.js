@@ -52,7 +52,7 @@ export const mergeCellsF = (row, selectedPlainTextCells, selectedCipherTextCells
 
                 // merge cells 1 and 2
                 let cell2 = _row[idx2];
-                cell1[text] += cell2[text];
+                cell1[text] += cell2[text] ? cell2[text] : ' ';
                 for (let i = idx2; i < _row.length - 1; i++)
                     _row[i][text] = _row[i + 1][text];
 
