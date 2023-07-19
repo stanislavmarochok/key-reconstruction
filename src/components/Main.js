@@ -1,4 +1,4 @@
-import {forwardRef, useEffect, useImperativeHandle, useRef, useState} from "react";
+import {forwardRef, useImperativeHandle, useRef} from "react";
 import Rows from "./Rows";
 
 const Main = forwardRef((props, ref) => {
@@ -12,6 +12,12 @@ const Main = forwardRef((props, ref) => {
         },
         splitCells() {
             _ref.current.splitCells();
+        },
+        shiftCellsRight() {
+            _ref.current.shiftCellsRight();
+        },
+        shiftCellsLeft() {
+            _ref.current.shiftCellsLeft();
         }
     }));
 

@@ -1,6 +1,6 @@
 import {forwardRef, useEffect, useImperativeHandle, useState} from "react";
 import TextCell from "./TextCell";
-import {mergeCellsF, splitCellsF} from "../functions/cells";
+import {mergeCellsF, shiftCellsLeftF, shiftCellsRightF, splitCellsF} from "../functions/cells";
 
 const Row = forwardRef((props, ref) => {
     const [row, setRow] = useState(props.data);
@@ -13,6 +13,12 @@ const Row = forwardRef((props, ref) => {
         },
         splitCells() {
             splitCells();
+        },
+        shiftCellsRight() {
+            shiftCellsRight();
+        },
+        shiftCellsLeft() {
+            shiftCellsLeft();
         }
     }));
 
@@ -64,7 +70,6 @@ const Row = forwardRef((props, ref) => {
     const mergeCells = () => {
         let result = mergeCellsF(row, selectedPlainTextCells, selectedCipherTextCells);
         if (!result){
-            console.log('merge failed');
             return;
         }
 
@@ -76,7 +81,28 @@ const Row = forwardRef((props, ref) => {
     const splitCells = () => {
         let result = splitCellsF(row, selectedPlainTextCells, selectedCipherTextCells);
         if (!result){
-            console.log('merge failed');
+            return;
+        }
+
+        setRow(result.row);
+        setSelectedPlainTextCells(result.selectedPlainTextCells);
+        setSelectedCipherTextCells(result.selectedCipherTextCells);
+    };
+
+    const shiftCellsRight = () => {
+        let result = shiftCellsRightF(row, selectedPlainTextCells, selectedCipherTextCells);
+        if (!result){
+            return;
+        }
+
+        setRow(result.row);
+        setSelectedPlainTextCells(result.selectedPlainTextCells);
+        setSelectedCipherTextCells(result.selectedCipherTextCells);
+    };
+
+    const shiftCellsLeft = () => {
+        let result = shiftCellsLeftF(row, selectedPlainTextCells, selectedCipherTextCells);
+        if (!result){
             return;
         }
 

@@ -19,6 +19,16 @@ const Rows = forwardRef((props, ref) => {
             for (let i = 0; i < rowsRef.current.length; i++){
                 rowsRef.current[i].splitCells();
             }
+        },
+        shiftCellsRight() {
+            for (let i = 0; i < rowsRef.current.length; i++){
+                rowsRef.current[i].shiftCellsRight();
+            }
+        },
+        shiftCellsLeft() {
+            for (let i = 0; i < rowsRef.current.length; i++){
+                rowsRef.current[i].shiftCellsLeft();
+            }
         }
     }));
 

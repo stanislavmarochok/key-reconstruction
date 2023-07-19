@@ -71,8 +71,8 @@ function Buttons(props) {
             <ButtonGroup color="green" className="mx-auto">
                 <Button onClick={props.handleMergeCells}>merge cells</Button>
                 <Button onClick={props.handleSplitCells}>split cells</Button>
-                <Button>shift right</Button>
-                <Button>shift left</Button>
+                <Button onClick={props.handleShiftCellsRight}>shift right</Button>
+                <Button onClick={props.handleShiftCellsLeft}>shift left</Button>
             </ButtonGroup>
 
             {renderDialog("import plain text here", props.setPlainText)}

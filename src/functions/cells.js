@@ -1,3 +1,15 @@
+const removeEmptyCells = (_row) => {
+    while (true){
+        let idx = _row.length - 1;
+        let cell = _row[idx];
+        if (!cell || (!cell.plainText && !cell.cipherText)){
+            _row.pop();
+        }
+        else
+            break;
+    }
+}
+
 export const mergeCellsF = (row, selectedPlainTextCells, selectedCipherTextCells) => {
     const mergeCells = () => {
         let _row = JSON.parse(JSON.stringify(row));
@@ -10,15 +22,7 @@ export const mergeCellsF = (row, selectedPlainTextCells, selectedCipherTextCells
         mergeRowCells(_row, _selectedPlainTextCells, 'plainText');
         mergeRowCells(_row, _selectedCipherTextCells, 'cipherText');
 
-        while (true){
-            let idx = _row.length - 1;
-            let cell = _row[idx];
-            if (!cell || (!cell.plainText && !cell.cipherText)){
-                _row.pop();
-            }
-            else
-                break;
-        }
+        removeEmptyCells(_row);
 
         return {
             row: _row,
@@ -61,6 +65,7 @@ export const mergeCellsF = (row, selectedPlainTextCells, selectedCipherTextCells
             }
         }
     }
+
     return mergeCells();
 }
 
@@ -121,5 +126,105 @@ export const splitCellsF = (row, selectedPlainTextCells, selectedCipherTextCells
             }
         }
     }
+
     return splitCells();
+}
+
+export const shiftCellsRightF = (row, selectedPlainTextCells, selectedCipherTextCells) => {
+    const shiftCellsRight = () => {
+        let _row = JSON.parse(JSON.stringify(row));
+        let _selectedPlainTextCells = JSON.parse(JSON.stringify(selectedPlainTextCells));
+        let _selectedCipherTextCells = JSON.parse(JSON.stringify(selectedCipherTextCells));
+        if (_row.length <= 1) {
+            return false;
+        }
+
+        shiftRowCellsRight(_row, _selectedPlainTextCells, 'plainText');
+        shiftRowCellsRight(_row, _selectedCipherTextCells, 'cipherText');
+
+        return {
+            row: _row,
+            selectedPlainTextCells: _selectedPlainTextCells,
+            selectedCipherTextCells: _selectedCipherTextCells
+        };
+    }
+
+    const shiftRowCellsRight = (_row, _selectedTextCells, text) => {
+        let idx = 0;
+        while (true) {
+            if (idx >= _row.length)
+                break;
+
+            if (!_selectedTextCells.includes(idx)) {
+                idx++;
+                continue;
+            }
+
+            if (_row[_row.length - 1][text])
+                _row.push({plainText: false, cipherText: false});
+
+            for (let i = _row.length - 1; i > idx; i--){
+                _row[i][text] = _row[i - 1][text];
+            }
+
+            _row[idx][text] = false;
+
+            for (let i = 0; i < _selectedTextCells.length; i++)
+                if (_selectedTextCells[i] >= idx)
+                    _selectedTextCells[i] += 1;
+
+            idx += 2;
+        }
+    }
+
+    return shiftCellsRight();
+}
+
+export const shiftCellsLeftF = (row, selectedPlainTextCells, selectedCipherTextCells) => {
+    const shiftCellsLeft = () => {
+        let _row = JSON.parse(JSON.stringify(row));
+        let _selectedPlainTextCells = JSON.parse(JSON.stringify(selectedPlainTextCells));
+        let _selectedCipherTextCells = JSON.parse(JSON.stringify(selectedCipherTextCells));
+        if (_row.length <= 1) {
+            return false;
+        }
+
+        shiftRowCellsLeft(_row, _selectedPlainTextCells, 'plainText');
+        shiftRowCellsLeft(_row, _selectedCipherTextCells, 'cipherText');
+
+        removeEmptyCells(_row);
+
+        return {
+            row: _row,
+            selectedPlainTextCells: _selectedPlainTextCells,
+            selectedCipherTextCells: _selectedCipherTextCells
+        };
+    }
+
+    const shiftRowCellsLeft = (_row, _selectedTextCells, text) => {
+        let idx = 0;
+        while (true) {
+            if (idx >= _row.length)
+                break;
+
+            if (!_selectedTextCells.includes(idx)) {
+                idx++;
+                continue;
+            }
+
+            if (_row[idx - 1][text]){
+                idx++;
+                continue;
+            }
+
+            _row[idx - 1][text] = _row[idx][text];
+            _row[idx][text] = false;
+
+            for (let i = 0; i < _selectedTextCells.length; i++)
+                if (_selectedTextCells[i] === idx)
+                    _selectedTextCells[i] -= 1;
+        }
+    }
+
+    return shiftCellsLeft();
 }

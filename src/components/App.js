@@ -17,9 +17,23 @@ const App = () => {
     ref.current.splitCells();
   }
 
+  const handleShiftCellsRight = () => {
+    ref.current.shiftCellsRight();
+  }
+
+  const handleShiftCellsLeft = () => {
+    ref.current.shiftCellsLeft();
+  }
+
   return (<>
     <Header />
-    <Buttons setPlainText={setPlainText} setCipherText={setCipherText} handleMergeCells={handleMergeCells} handleSplitCells={handleSplitCells} />
+    <Buttons
+        setPlainText={setPlainText}
+        setCipherText={setCipherText}
+        handleMergeCells={handleMergeCells}
+        handleSplitCells={handleSplitCells}
+        handleShiftCellsRight={handleShiftCellsRight}
+        handleShiftCellsLeft={handleShiftCellsLeft} />
 
     <Main ref={ref} isJson={false} data={{plainText, cipherText}}  />
   </>);
