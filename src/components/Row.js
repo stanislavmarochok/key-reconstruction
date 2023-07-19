@@ -43,13 +43,19 @@ const Row = forwardRef((props, ref) => {
         }
     };
 
+    const handleUpdateCellData = (idx,isPlainText, data) => {
+        let _row = JSON.parse(JSON.stringify(row));
+        _row[idx][isPlainText ? 'plainText' : 'cipherText'] = data;
+        setRow(_row);
+    }
+
     const renderRow = (isPlainText, key, isSelected) => {
         return <tr>
             {row.map((rowItem, idx) => {
                 const keyFull = `${key}-${isPlainText ? 'plainText' : 'cipherText'}-${idx}`;
 
                 return <td key={keyFull} align={"center"} className={`border-solid border-2 border-black p-0 m-0 hover:cursor-pointer hover:bg-blue-300 hover:text-white transition duration-200 ${isSelected(idx) ? 'bg-deep-purple-200' : isPlainText ? 'bg-amber-200' : 'bg-blue-100'}`} onClick={() => handleCellClicked(idx, isPlainText)}>
-                    <TextCell data={isPlainText ? rowItem.plainText : rowItem.cipherText} />
+                    <TextCell data={isPlainText ? rowItem.plainText : rowItem.cipherText} setCellData={(data) => handleUpdateCellData(idx, isPlainText, data)} />
                 </td>;
             })}
         </tr>

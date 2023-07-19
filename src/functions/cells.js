@@ -1,7 +1,5 @@
 export const mergeCellsF = (row, selectedPlainTextCells, selectedCipherTextCells) => {
     const mergeCells = () => {
-        console.log(row);
-
         let _row = JSON.parse(JSON.stringify(row));
         let _selectedPlainTextCells = JSON.parse(JSON.stringify(selectedPlainTextCells));
         let _selectedCipherTextCells = JSON.parse(JSON.stringify(selectedCipherTextCells));
