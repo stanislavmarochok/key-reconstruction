@@ -1,4 +1,4 @@
-const removeEmptyCells = (_row) => {
+const removeEmptyCells = (_row, _selectedPlainTextCells, _selectedCipherTextCells) => {
     // remove empty cells from the end
     while (true){
         let idx = _row.length - 1;
@@ -16,6 +16,12 @@ const removeEmptyCells = (_row) => {
         let cell = _row[idx];
         if (!cell || (!cell.plainText && !cell.cipherText)){
             _row.shift();
+
+            for (let i = 0; i < _selectedPlainTextCells.length; i++)
+                _selectedPlainTextCells[i] -= 1;
+
+            for (let i = 0; i < _selectedCipherTextCells.length; i++)
+                _selectedCipherTextCells[i] -= 1;
         }
         else
             break;
@@ -34,7 +40,7 @@ export const mergeCellsF = (row, selectedPlainTextCells, selectedCipherTextCells
         mergeRowCells(_row, _selectedPlainTextCells, 'plainText');
         mergeRowCells(_row, _selectedCipherTextCells, 'cipherText');
 
-        removeEmptyCells(_row);
+        removeEmptyCells(_row, _selectedPlainTextCells, _selectedCipherTextCells);
 
         return {
             row: _row,
@@ -154,7 +160,7 @@ export const shiftCellsRightF = (row, selectedPlainTextCells, selectedCipherText
         shiftRowCellsRight(_row, _selectedPlainTextCells, 'plainText');
         shiftRowCellsRight(_row, _selectedCipherTextCells, 'cipherText');
 
-        removeEmptyCells(_row);
+        removeEmptyCells(_row, _selectedPlainTextCells, _selectedCipherTextCells);
 
         return {
             row: _row,
@@ -193,7 +199,7 @@ export const shiftCellsRightF = (row, selectedPlainTextCells, selectedCipherText
             _row[idx][text] = false;
 
             for (let i = 0; i < _selectedTextCells.length; i++)
-                if (_selectedTextCells[i] >= idx && (!firstFreeCell || _selectedTextCells[i] < firstFreeCell))
+                if (_selectedTextCells[i] >= idx && (firstFreeCell === false || _selectedTextCells[i] < firstFreeCell))
                     _selectedTextCells[i] += 1;
         }
     }
@@ -213,7 +219,7 @@ export const shiftCellsLeftF = (row, selectedPlainTextCells, selectedCipherTextC
         shiftRowCellsLeft(_row, _selectedPlainTextCells, 'plainText');
         shiftRowCellsLeft(_row, _selectedCipherTextCells, 'cipherText');
 
-        removeEmptyCells(_row);
+        removeEmptyCells(_row, _selectedPlainTextCells, _selectedCipherTextCells);
 
         return {
             row: _row,
@@ -225,30 +231,40 @@ export const shiftCellsLeftF = (row, selectedPlainTextCells, selectedCipherTextC
     const shiftRowCellsLeft = (_row, _selectedTextCells, text) => {
         let idx = 0;
         while (true) {
-            if (idx >= _row.length)
+            if (idx >= _row.length || idx < 0)
                 break;
 
             if (!_selectedTextCells.includes(idx)) {
-                idx++;
+                idx += 1;
                 continue;
             }
 
-            let isCellInsertedAtBeggining = false;
-            if (_row[0][text]){
-                _row.unshift({plainText: false, cipherText: false});
-                idx++;
-                isCellInsertedAtBeggining = true;
+            let firstFreeCellToLeft = false;
+            for (let i = idx - 1; i >= 0; i--){
+                if (!_row[i][text]){
+                    firstFreeCellToLeft = i;
+                    break;
+                }
             }
 
-            for (let i = 0; i < idx; i++){
+            if (firstFreeCellToLeft === false){
+                _row.unshift({plainText: false, cipherText: false});
+                idx += 1;
+            }
+
+            for (let i = firstFreeCellToLeft !== false ? firstFreeCellToLeft : 0; i < idx; i++){
                 _row[i][text] = _row[i + 1][text];
             }
 
             _row[idx][text] = false;
 
-            for (let i = 0; i < _selectedTextCells.length; i++)
-                if (!isCellInsertedAtBeggining && _selectedTextCells[i] <= idx)
-                    _selectedTextCells[i] -= 1;
+            if (firstFreeCellToLeft !== false)
+                for (let i = 0; i < _selectedTextCells.length; i++){
+                    if (_selectedTextCells[i] > firstFreeCellToLeft && _selectedTextCells[i] <= idx)
+                        _selectedTextCells[i] -= 1;
+                }
+
+            idx += 1;
         }
     }
 
@@ -267,7 +283,7 @@ export const separateCellsF = (row, selectedPlainTextCells, selectedCipherTextCe
         separateRowCells(_row, _selectedPlainTextCells, 'plainText');
         separateRowCells(_row, _selectedCipherTextCells, 'cipherText');
 
-        removeEmptyCells(_row);
+        removeEmptyCells(_row, _selectedPlainTextCells, _selectedCipherTextCells);
 
         return {
             row: _row,
