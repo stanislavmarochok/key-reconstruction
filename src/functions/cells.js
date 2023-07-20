@@ -237,3 +237,52 @@ export const shiftCellsLeftF = (row, selectedPlainTextCells, selectedCipherTextC
 
     return shiftCellsLeft();
 }
+
+export const separateCellsF = (row, selectedPlainTextCells, selectedCipherTextCells) => {
+    const separateCells = () => {
+        let _row = JSON.parse(JSON.stringify(row));
+        let _selectedPlainTextCells = JSON.parse(JSON.stringify(selectedPlainTextCells));
+        let _selectedCipherTextCells = JSON.parse(JSON.stringify(selectedCipherTextCells));
+        if (_row.length <= 1) {
+            return false;
+        }
+
+        separateRowCells(_row, _selectedPlainTextCells, 'plainText');
+        separateRowCells(_row, _selectedCipherTextCells, 'cipherText');
+
+        removeEmptyCells(_row);
+
+        return {
+            row: _row,
+            selectedPlainTextCells: _selectedPlainTextCells,
+            selectedCipherTextCells: _selectedCipherTextCells
+        };
+    }
+
+    const separateRowCells = (_row, _selectedTextCells, text) => {
+        let idx = 0;
+        while (true) {
+            if (idx >= _row.length)
+                break;
+
+            if (!_selectedTextCells.includes(idx)) {
+                idx++;
+                continue;
+            }
+
+            if (_row[idx - 1][text]){
+                idx++;
+                continue;
+            }
+
+            _row[idx - 1][text] = _row[idx][text];
+            _row[idx][text] = false;
+
+            for (let i = 0; i < _selectedTextCells.length; i++)
+                if (_selectedTextCells[i] === idx)
+                    _selectedTextCells[i] -= 1;
+        }
+    }
+
+    return separateCells();
+}

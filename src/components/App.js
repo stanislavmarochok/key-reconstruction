@@ -25,6 +25,10 @@ const App = () => {
     ref.current.shiftCellsLeft();
   }
 
+  const handleSeparateCells = () => {
+    ref.current.separateCells();
+  }
+
   return (<>
     <Header />
     <Buttons
@@ -33,7 +37,8 @@ const App = () => {
         handleMergeCells={handleMergeCells}
         handleSplitCells={handleSplitCells}
         handleShiftCellsRight={handleShiftCellsRight}
-        handleShiftCellsLeft={handleShiftCellsLeft} />
+        handleShiftCellsLeft={handleShiftCellsLeft}
+        handleSeparateCells={handleSeparateCells} />
 
     <Main ref={ref} isJson={false} data={{plainText, cipherText}}  />
   </>);

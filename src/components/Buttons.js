@@ -1,12 +1,15 @@
 import {
-    Button, ButtonGroup, Dialog, DialogBody, DialogHeader
+    Button, ButtonGroup, Dialog, DialogBody, DialogHeader, Input
 } from "@material-tailwind/react";
 import {useState} from "react";
 
 function Buttons(props) {
     const [isImportTextDialogOpen, setIsImportTextDialogOpen] = useState(false);
+    const [isSeparateCellsDialogOpen, setIsSeparateCellsDialogOpen] = useState(false);
 
     const handleOpenImportTextDialog = () => setIsImportTextDialogOpen(!isImportTextDialogOpen);
+
+    const handleOpenSeparateCellsDialog = () => setIsSeparateCellsDialogOpen(!isSeparateCellsDialogOpen);
 
     const uploadText = async (e, onChangeHandler) => {
         e.preventDefault();
@@ -61,6 +64,21 @@ function Buttons(props) {
         );
     }
 
+    const renderSeparateCellsDialog = () => {
+        return (
+            <Dialog open={isSeparateCellsDialogOpen} handler={handleOpenSeparateCellsDialog}>
+                <DialogHeader className="uppercase">Separate cells</DialogHeader>
+                <DialogBody divider>
+                    <div className="mb-4 flex flex-col gap-6">
+                        <Input size="lg" label="Name" />
+                        <Input size="lg" label="Email" />
+                        <Input type="password" size="lg" label="Password" />
+                    </div>
+                </DialogBody>
+            </Dialog>
+        );
+    }
+
     return (
         <div className="flex flex-col w-max gap-4 mx-auto mt-2">
             <ButtonGroup className="mx-auto">
@@ -73,10 +91,11 @@ function Buttons(props) {
                 <Button onClick={props.handleSplitCells}>split cells</Button>
                 <Button onClick={props.handleShiftCellsRight}>shift right</Button>
                 <Button onClick={props.handleShiftCellsLeft}>shift left</Button>
+                <Button onClick={handleOpenSeparateCellsDialog}>separate text</Button>
             </ButtonGroup>
 
             {renderDialog("import plain text here", props.setPlainText)}
-
+            {renderSeparateCellsDialog()}
         </div>
     );
 }

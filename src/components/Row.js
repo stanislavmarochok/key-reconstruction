@@ -1,6 +1,6 @@
 import {forwardRef, useEffect, useImperativeHandle, useState} from "react";
 import TextCell from "./TextCell";
-import {mergeCellsF, shiftCellsLeftF, shiftCellsRightF, splitCellsF} from "../functions/cells";
+import {mergeCellsF, separateCellsF, shiftCellsLeftF, shiftCellsRightF, splitCellsF} from "../functions/cells";
 
 const Row = forwardRef((props, ref) => {
     const [row, setRow] = useState(props.data);
@@ -19,6 +19,9 @@ const Row = forwardRef((props, ref) => {
         },
         shiftCellsLeft() {
             shiftCellsLeft();
+        },
+        separateCells() {
+            separateCells();
         }
     }));
 
@@ -102,6 +105,17 @@ const Row = forwardRef((props, ref) => {
 
     const shiftCellsLeft = () => {
         let result = shiftCellsLeftF(row, selectedPlainTextCells, selectedCipherTextCells);
+        if (!result){
+            return;
+        }
+
+        setRow(result.row);
+        setSelectedPlainTextCells(result.selectedPlainTextCells);
+        setSelectedCipherTextCells(result.selectedCipherTextCells);
+    };
+
+    const separateCells = () => {
+        let result = separateCellsF(row, selectedPlainTextCells, selectedCipherTextCells);
         if (!result){
             return;
         }
