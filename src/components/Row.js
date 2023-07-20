@@ -112,8 +112,8 @@ const Row = forwardRef((props, ref) => {
     };
 
     return (<>
-        <div className="mt-2">
-            <table className="w-fit">
+        <div className="mt-2 mx-auto w-full">
+            <table className="w-fit mx-auto">
                 <tbody>
                     {renderRow(true, props._key, isPlainTextCellSelected)}
                     {renderRow(false, props._key, isCipherTextCellSelected)}
