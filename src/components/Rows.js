@@ -30,9 +30,9 @@ const Rows = forwardRef((props, ref) => {
                 rowsRef.current[i].shiftCellsLeft();
             }
         },
-        separateCells() {
+        separateCells(row, textSeparator, groupItems) {
             for (let i = 0; i < rowsRef.current.length; i++){
-                rowsRef.current[i].separateCells();
+                rowsRef.current[i].separateCells(row, textSeparator, groupItems);
             }
         }
     }));

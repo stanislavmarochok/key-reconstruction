@@ -1,6 +1,7 @@
 import {forwardRef, useEffect, useImperativeHandle, useState} from "react";
 import TextCell from "./TextCell";
 import {mergeCellsF, separateCellsF, shiftCellsLeftF, shiftCellsRightF, splitCellsF} from "../functions/cells";
+import {Typography} from "@material-tailwind/react";
 
 const Row = forwardRef((props, ref) => {
     const [row, setRow] = useState(props.data);
@@ -20,8 +21,8 @@ const Row = forwardRef((props, ref) => {
         shiftCellsLeft() {
             shiftCellsLeft();
         },
-        separateCells() {
-            separateCells();
+        separateCells(rowName, textSeparator, groupItems) {
+            separateCells(rowName, textSeparator, groupItems);
         }
     }));
 
@@ -70,6 +71,16 @@ const Row = forwardRef((props, ref) => {
         </tr>
     }
 
+    const renderRowIndexes = () => {
+        return <tr>
+            {row && row.map((cell, idx) => <td align={"center"} key={`index-cell-${idx}`}>
+                <Typography className="text-[0.6em]">
+                    {idx}
+                </Typography>
+            </td>)}
+        </tr>;
+    }
+
     const mergeCells = () => {
         let result = mergeCellsF(row, selectedPlainTextCells, selectedCipherTextCells);
         if (!result){
@@ -114,23 +125,23 @@ const Row = forwardRef((props, ref) => {
         setSelectedCipherTextCells(result.selectedCipherTextCells);
     };
 
-    const separateCells = () => {
-        let result = separateCellsF(row, selectedPlainTextCells, selectedCipherTextCells);
+    const separateCells = (rowName, textSeparator, groupItems) => {
+        let result = separateCellsF(row, rowName, textSeparator, groupItems);
         if (!result){
             return;
         }
 
         setRow(result.row);
-        setSelectedPlainTextCells(result.selectedPlainTextCells);
-        setSelectedCipherTextCells(result.selectedCipherTextCells);
     };
 
     return (<>
         <div className="mt-2 mx-auto w-full">
             <table className="w-fit mx-auto">
                 <tbody>
+                    {renderRowIndexes()}
                     {renderRow(true, props._key, isPlainTextCellSelected)}
                     {renderRow(false, props._key, isCipherTextCellSelected)}
+                    {renderRowIndexes()}
                 </tbody>
             </table>
         </div>

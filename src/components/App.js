@@ -25,8 +25,8 @@ const App = () => {
     ref.current.shiftCellsLeft();
   }
 
-  const handleSeparateCells = () => {
-    ref.current.separateCells();
+  const handleSeparateCells = (row, textSeparator, groupItems) => {
+    ref.current.separateCells(row, textSeparator, groupItems);
   }
 
   return (<>

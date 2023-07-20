@@ -19,8 +19,8 @@ const Main = forwardRef((props, ref) => {
         shiftCellsLeft() {
             _ref.current.shiftCellsLeft();
         },
-        separateCells() {
-            _ref.current.separateCells();
+        separateCells(row, textSeparator, groupItems) {
+            _ref.current.separateCells(row, textSeparator, groupItems);
         }
     }));
 

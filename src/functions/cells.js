@@ -2,6 +2,9 @@ const removeEmptyCells = (_row, _selectedPlainTextCells, _selectedCipherTextCell
     // remove empty cells from the end
     while (true){
         let idx = _row.length - 1;
+        if (idx < 0)
+            return;
+
         let cell = _row[idx];
         if (!cell || (cell.plainText === false && cell.cipherText === false)){
             _row.pop();
@@ -17,11 +20,13 @@ const removeEmptyCells = (_row, _selectedPlainTextCells, _selectedCipherTextCell
         if (!cell || (cell.plainText === false && cell.cipherText === false)){
             _row.shift();
 
-            for (let i = 0; i < _selectedPlainTextCells.length; i++)
-                _selectedPlainTextCells[i] -= 1;
+            if (_selectedPlainTextCells && _selectedPlainTextCells.length > 0)
+                for (let i = 0; i < _selectedPlainTextCells.length; i++)
+                    _selectedPlainTextCells[i] -= 1;
 
-            for (let i = 0; i < _selectedCipherTextCells.length; i++)
-                _selectedCipherTextCells[i] -= 1;
+            if (_selectedCipherTextCells && _selectedCipherTextCells.length > 0)
+                for (let i = 0; i < _selectedCipherTextCells.length; i++)
+                    _selectedCipherTextCells[i] -= 1;
         }
         else
             break;
@@ -275,50 +280,56 @@ export const shiftCellsLeftF = (row, selectedPlainTextCells, selectedCipherTextC
     return shiftCellsLeft();
 }
 
-export const separateCellsF = (row, selectedPlainTextCells, selectedCipherTextCells) => {
+export const separateCellsF = (row, rowName, textSeparator, groupItems) => {
     const separateCells = () => {
         let _row = JSON.parse(JSON.stringify(row));
-        let _selectedPlainTextCells = JSON.parse(JSON.stringify(selectedPlainTextCells));
-        let _selectedCipherTextCells = JSON.parse(JSON.stringify(selectedCipherTextCells));
-        if (_row.length <= 1) {
-            return false;
+
+        let wholeText = "";
+        for (let i = 0; i < _row.length; i++){
+            let cell = _row[i];
+            if (cell[rowName] !== false)
+                wholeText += cell[rowName];
         }
 
-        separateRowCells(_row, _selectedPlainTextCells, 'plainText');
-        separateRowCells(_row, _selectedCipherTextCells, 'cipherText');
+        let splittedTextGroups = [];
+        if (textSeparator){
+            let groups = wholeText.split(textSeparator);
+            for (let i = 0; i < groups.length; i++){
+                splittedTextGroups.push(groups[i]);
+                splittedTextGroups.push(textSeparator);
+            }
+        }
 
-        removeEmptyCells(_row, _selectedPlainTextCells, _selectedCipherTextCells);
+        if (groupItems){
+            splittedTextGroups = [];
+            for (let i = 0; i < wholeText.length; i += groupItems){
+                let groups = [];
+                for (let j = 0; j < groupItems; j++){
+                    groups.push(wholeText[i + j]);
+                }
+                splittedTextGroups.push(groups.join(''));
+            }
+        }
+
+        for (let i = 0; i < splittedTextGroups.length; i++){
+            if (i >= _row.length)
+                break;
+            _row[i][rowName] = splittedTextGroups[i];
+        }
+
+        for (let i = splittedTextGroups.length; i < _row.length; i++){
+            if (i >= _row.length)
+                break;
+            _row[i][rowName] = false;
+        }
+
+        removeEmptyCells(_row);
 
         return {
             row: _row,
-            selectedPlainTextCells: _selectedPlainTextCells,
-            selectedCipherTextCells: _selectedCipherTextCells
+            selectedPlainTextCells: [],
+            selectedCipherTextCells: []
         };
-    }
-
-    const separateRowCells = (_row, _selectedTextCells, text) => {
-        let idx = 0;
-        while (true) {
-            if (idx >= _row.length)
-                break;
-
-            if (!_selectedTextCells.includes(idx)) {
-                idx++;
-                continue;
-            }
-
-            if (_row[idx - 1][text] !== false){
-                idx++;
-                continue;
-            }
-
-            _row[idx - 1][text] = _row[idx][text];
-            _row[idx][text] = false;
-
-            for (let i = 0; i < _selectedTextCells.length; i++)
-                if (_selectedTextCells[i] === idx)
-                    _selectedTextCells[i] -= 1;
-        }
     }
 
     return separateCells();

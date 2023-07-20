@@ -1,15 +1,13 @@
 import {
-    Button, ButtonGroup, Dialog, DialogBody, DialogHeader, Input
+    Button, ButtonGroup, Dialog, DialogBody, DialogHeader, Input, Option, Select
 } from "@material-tailwind/react";
 import {useState} from "react";
 
 function Buttons(props) {
     const [isImportTextDialogOpen, setIsImportTextDialogOpen] = useState(false);
-    const [isSeparateCellsDialogOpen, setIsSeparateCellsDialogOpen] = useState(false);
+    const [selectedRowType, setSelectedRowType] = useState("cipherText");
 
     const handleOpenImportTextDialog = () => setIsImportTextDialogOpen(!isImportTextDialogOpen);
-
-    const handleOpenSeparateCellsDialog = () => setIsSeparateCellsDialogOpen(!isSeparateCellsDialogOpen);
 
     const uploadText = async (e, onChangeHandler) => {
         e.preventDefault();
@@ -38,6 +36,13 @@ function Buttons(props) {
         );
     }
 
+    const handleSeparateCells = (e) => {
+        const textSeparator = document.getElementById('text-separator-input').value;
+        const groupItems = parseInt(document.getElementById('group-items-input').value);
+
+        props.handleSeparateCells(selectedRowType, textSeparator, groupItems);
+    }
+
     const renderDialog = (title) => {
         return (
             <Dialog open={isImportTextDialogOpen} handler={handleOpenImportTextDialog}>
@@ -64,23 +69,8 @@ function Buttons(props) {
         );
     }
 
-    const renderSeparateCellsDialog = () => {
-        return (
-            <Dialog open={isSeparateCellsDialogOpen} handler={handleOpenSeparateCellsDialog}>
-                <DialogHeader className="uppercase">Separate cells</DialogHeader>
-                <DialogBody divider>
-                    <div className="mb-4 flex flex-col gap-6">
-                        <Input size="lg" label="Name" />
-                        <Input size="lg" label="Email" />
-                        <Input type="password" size="lg" label="Password" />
-                    </div>
-                </DialogBody>
-            </Dialog>
-        );
-    }
-
     return (
-        <div className="flex flex-col w-max gap-4 mx-auto mt-2">
+        <div className="flex flex-col w-max gap-2 mx-auto mt-2">
             <ButtonGroup className="mx-auto">
                 <Button onClick={handleOpenImportTextDialog}>import text</Button>
                 <Button>import json</Button>
@@ -91,11 +81,19 @@ function Buttons(props) {
                 <Button onClick={props.handleSplitCells}>split cells</Button>
                 <Button onClick={props.handleShiftCellsRight}>shift right</Button>
                 <Button onClick={props.handleShiftCellsLeft}>shift left</Button>
-                <Button onClick={handleOpenSeparateCellsDialog}>separate text</Button>
+                <Button onClick={handleSeparateCells}>separate</Button>
             </ButtonGroup>
 
+            <div className="mb-4 flex gap-2">
+                <Select id="row-select" label="Which row to separate" value={selectedRowType} onChange={(e) => setSelectedRowType(e)}>
+                    <Option value="cipherText">Cipher text</Option>
+                    <Option value="plainText">Plain text</Option>
+                </Select>
+                <Input id="text-separator-input" size="md" label="Apply text separator" />
+                <Input id="group-items-input" size="md" label="Group every N items" type="number" min="1" />
+            </div>
+
             {renderDialog("import plain text here", props.setPlainText)}
-            {renderSeparateCellsDialog()}
         </div>
     );
 }
