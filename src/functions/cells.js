@@ -150,17 +150,28 @@ export const shiftCellsRightF = (row, selectedPlainTextCells, selectedCipherText
     }
 
     const shiftRowCellsRight = (_row, _selectedTextCells, text) => {
-        let idx = 0;
+        let idx = _row.length - 1;
         while (true) {
-            if (idx >= _row.length)
+            if (idx >= _row.length || idx < 0)
                 break;
 
             if (!_selectedTextCells.includes(idx)) {
-                idx++;
+                idx--;
                 continue;
             }
 
-            if (_row[_row.length - 1][text])
+            if (_row.length > idx + 1 && !_row[idx + 1][text]){
+                _row[idx + 1][text] = _row[idx][text];
+                _row[idx][text] = false;
+
+                for (let i = 0; i < _selectedTextCells.length; i++)
+                    if (_selectedTextCells[i] === idx)
+                        _selectedTextCells[i] += 1;
+
+                continue;
+            }
+
+            if (_row[_row.length - 1][text] || idx === _row.length - 1)
                 _row.push({plainText: false, cipherText: false});
 
             for (let i = _row.length - 1; i > idx; i--){
@@ -172,8 +183,6 @@ export const shiftCellsRightF = (row, selectedPlainTextCells, selectedCipherText
             for (let i = 0; i < _selectedTextCells.length; i++)
                 if (_selectedTextCells[i] >= idx)
                     _selectedTextCells[i] += 1;
-
-            idx += 2;
         }
     }
 
