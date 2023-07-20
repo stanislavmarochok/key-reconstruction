@@ -3,7 +3,7 @@ const removeEmptyCells = (_row, _selectedPlainTextCells, _selectedCipherTextCell
     while (true){
         let idx = _row.length - 1;
         let cell = _row[idx];
-        if (!cell || (!cell.plainText && !cell.cipherText)){
+        if (!cell || (cell.plainText === false && cell.cipherText === false)){
             _row.pop();
         }
         else
@@ -14,7 +14,7 @@ const removeEmptyCells = (_row, _selectedPlainTextCells, _selectedCipherTextCell
     while (true){
         let idx = 0;
         let cell = _row[idx];
-        if (!cell || (!cell.plainText && !cell.cipherText)){
+        if (!cell || (cell.plainText === false && cell.cipherText === false)){
             _row.shift();
 
             for (let i = 0; i < _selectedPlainTextCells.length; i++)
@@ -241,7 +241,7 @@ export const shiftCellsLeftF = (row, selectedPlainTextCells, selectedCipherTextC
 
             let firstFreeCellToLeft = false;
             for (let i = idx - 1; i >= 0; i--){
-                if (!_row[i][text]){
+                if (_row[i][text] === false){
                     firstFreeCellToLeft = i;
                     break;
                 }
@@ -259,10 +259,14 @@ export const shiftCellsLeftF = (row, selectedPlainTextCells, selectedCipherTextC
             _row[idx][text] = false;
 
             if (firstFreeCellToLeft !== false)
-                for (let i = 0; i < _selectedTextCells.length; i++){
+                for (let i = 0; i < _selectedTextCells.length; i++)
                     if (_selectedTextCells[i] > firstFreeCellToLeft && _selectedTextCells[i] <= idx)
                         _selectedTextCells[i] -= 1;
-                }
+
+            if (firstFreeCellToLeft === false)
+                for (let i = 0; i < _selectedTextCells.length; i++)
+                    if (_selectedTextCells[i] > idx)
+                        _selectedTextCells[i] += 1;
 
             idx += 1;
         }
@@ -303,7 +307,7 @@ export const separateCellsF = (row, selectedPlainTextCells, selectedCipherTextCe
                 continue;
             }
 
-            if (_row[idx - 1][text]){
+            if (_row[idx - 1][text] !== false){
                 idx++;
                 continue;
             }
