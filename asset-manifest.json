@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/key-reconstruction/static/css/main.760f345b.css",
+    "main.js": "/key-reconstruction/static/js/main.f06318e5.js",
+    "index.html": "/key-reconstruction/index.html",
+    "main.760f345b.css.map": "/key-reconstruction/static/css/main.760f345b.css.map",
+    "main.f06318e5.js.map": "/key-reconstruction/static/js/main.f06318e5.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.760f345b.css",
+    "static/js/main.f06318e5.js"
+  ]
+}
