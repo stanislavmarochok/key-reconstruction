@@ -23,6 +23,9 @@ const Row = forwardRef((props, ref) => {
         },
         separateCells(rowName, textSeparator, groupItems) {
             separateCells(rowName, textSeparator, groupItems);
+        },
+        exportData() {
+            return exportData();
         }
     }));
 
@@ -132,6 +135,10 @@ const Row = forwardRef((props, ref) => {
         }
 
         setRow(result.row);
+    };
+
+    const exportData = () => {
+        return row;
     };
 
     return (<>

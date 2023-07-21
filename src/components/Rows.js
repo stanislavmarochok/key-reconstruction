@@ -34,6 +34,13 @@ const Rows = forwardRef((props, ref) => {
             for (let i = 0; i < rowsRef.current.length; i++){
                 rowsRef.current[i].separateCells(row, textSeparator, groupItems);
             }
+        },
+        exportData() {
+            let rows = [];
+            for (let i = 0; i < rowsRef.current.length; i++){
+                rows.push(rowsRef.current[i].exportData());
+            }
+            return rows;
         }
     }));
 

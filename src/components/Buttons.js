@@ -5,9 +5,11 @@ import {useState} from "react";
 
 function Buttons(props) {
     const [isImportTextDialogOpen, setIsImportTextDialogOpen] = useState(false);
+    const [isImportJsonDialogOpen, setIsImportJsonDialogOpen] = useState(false);
     const [selectedRowType, setSelectedRowType] = useState("cipherText");
 
     const handleOpenImportTextDialog = () => setIsImportTextDialogOpen(!isImportTextDialogOpen);
+    const handleOpenImportJsonDialog = () => setIsImportJsonDialogOpen(!isImportJsonDialogOpen);
 
     const uploadText = async (e, onChangeHandler) => {
         e.preventDefault();
@@ -44,7 +46,7 @@ function Buttons(props) {
     }
 
     const renderDialog = (title) => {
-        return (
+        return (<>
             <Dialog open={isImportTextDialogOpen} handler={handleOpenImportTextDialog}>
                 <DialogHeader className="uppercase">Import text</DialogHeader>
                 <DialogBody divider>
@@ -66,15 +68,28 @@ function Buttons(props) {
                     </div>
                 </DialogBody>
             </Dialog>
-        );
+
+            <Dialog open={isImportJsonDialogOpen} handler={handleOpenImportJsonDialog}>
+                <DialogHeader className="uppercase">Import JSON</DialogHeader>
+                <DialogBody divider>
+                    <div className="flex items-center justify-center w-full">
+                        <label htmlFor="dropzone-file"
+                               className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                            {renderDropDownFileInputArea('PLAIN TEXT')}
+                            <input id="dropzone-file" type="file" className="hidden" onChange={(e) => uploadText(e, props.handleImportData)} />
+                        </label>
+                    </div>
+                </DialogBody>
+            </Dialog>
+        </>);
     }
 
     return (
         <div className="flex flex-col w-max gap-2 mx-auto mt-2">
             <ButtonGroup className="mx-auto">
                 <Button onClick={handleOpenImportTextDialog}>import text</Button>
-                <Button>import json</Button>
-                <Button>export json</Button>
+                <Button onClick={handleOpenImportJsonDialog}>import json</Button>
+                <Button onClick={props.handleExportData}>export json</Button>
             </ButtonGroup>
             <ButtonGroup color="green" className="mx-auto">
                 <Button onClick={props.handleMergeCells}>merge cells</Button>

@@ -4,7 +4,7 @@ import Rows from "./Rows";
 const Main = forwardRef((props, ref) => {
     const _ref = useRef();
 
-    const rows = props.isJson ? parseJson(props.data) : mergePlainAndCipherText(props.data.plainText, props.data.cipherText);
+    const rows = props.data.rows ? props.data.rows : mergePlainAndCipherText(props.data.plainText, props.data.cipherText);
 
     useImperativeHandle(ref, () => ({
         mergeCells() {
@@ -21,6 +21,9 @@ const Main = forwardRef((props, ref) => {
         },
         separateCells(row, textSeparator, groupItems) {
             _ref.current.separateCells(row, textSeparator, groupItems);
+        },
+        exportData() {
+            return _ref.current.exportData();
         }
     }));
 
@@ -30,10 +33,6 @@ const Main = forwardRef((props, ref) => {
         </div>
     </>);
 });
-
-const parseJson = (json) => {
-    console.log(json);
-}
 
 const mergePlainAndCipherText = (plainText, cipherText) => {
     let plainTextRows = splitRows(plainText);
