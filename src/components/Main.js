@@ -24,6 +24,9 @@ const Main = forwardRef((props, ref) => {
         },
         exportData() {
             return _ref.current.exportData();
+        },
+        reconstructKey() {
+            return _ref.current.reconstructKey();
         }
     }));
 

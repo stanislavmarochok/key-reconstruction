@@ -90,6 +90,7 @@ function Buttons(props) {
                 <Button onClick={handleOpenImportTextDialog}>import text</Button>
                 <Button onClick={handleOpenImportJsonDialog}>import json</Button>
                 <Button onClick={props.handleExportData}>export json</Button>
+                <Button onClick={props.handleReconstructKey}>reconstruct key</Button>
             </ButtonGroup>
             <ButtonGroup color="green" className="mx-auto">
                 <Button onClick={props.handleMergeCells}>merge cells</Button>

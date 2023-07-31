@@ -41,6 +41,29 @@ const Rows = forwardRef((props, ref) => {
                 rows.push(rowsRef.current[i].exportData());
             }
             return rows;
+        },
+        reconstructKey() {
+            let key = {};
+            for (let i = 0; i < rowsRef.current.length; i++){
+                let rowKey = rowsRef.current[i].reconstructKey();
+                for (let plainTextKey in rowKey){
+                    let rowKeyCipherTextValues = rowKey[plainTextKey];
+
+                    if (key[plainTextKey] === undefined){
+                        key[plainTextKey] = rowKeyCipherTextValues;
+                    }
+
+                    if (key[plainTextKey] !== undefined){
+                        let keyCipherTextValues = key[plainTextKey];
+                        for (let j = 0; j < rowKeyCipherTextValues.length; j++){
+                            if (!keyCipherTextValues.includes(rowKeyCipherTextValues[j])){
+                                keyCipherTextValues.push(rowKeyCipherTextValues[j]);
+                            }
+                        }
+                    }
+                }
+            }
+            return key;
         }
     }));
 

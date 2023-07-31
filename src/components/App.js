@@ -42,6 +42,18 @@ const App = () => {
     link.click();
   }
 
+  const handleReconstructKey = () => {
+    const data = ref.current.reconstructKey();
+    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+        JSON.stringify(data)
+    )}`;
+    const link = document.createElement("a");
+    link.href = jsonString;
+    link.download = "reconstructedKey.json";
+
+    link.click();
+  }
+
   const handleImportData = (text) => {
     const data = JSON.parse(text);
     console.log(data);
@@ -59,6 +71,7 @@ const App = () => {
         handleShiftCellsLeft={handleShiftCellsLeft}
         handleSeparateCells={handleSeparateCells}
         handleExportData={handleExportData}
+        handleReconstructKey={handleReconstructKey}
         handleImportData={handleImportData} />
 
     <Main ref={ref} data={{plainText, cipherText, rows}}  />

@@ -26,6 +26,9 @@ const Row = forwardRef((props, ref) => {
         },
         exportData() {
             return exportData();
+        },
+        reconstructKey() {
+            return reconstructKey();
         }
     }));
 
@@ -139,6 +142,27 @@ const Row = forwardRef((props, ref) => {
 
     const exportData = () => {
         return row;
+    };
+
+    const reconstructKey = () => {
+        let key = {};
+
+        for (let i = 0; i < row.length; i++){
+            const plaintext = row[i].plainText;
+            const ciphertext = row[i].cipherText;
+
+            if (key[plaintext] === undefined){
+                key[plaintext] = [ciphertext];
+            }
+
+            if (key[plaintext] !== undefined){
+                let value = key[plaintext];
+                if (!value.includes(ciphertext))
+                    value.push(ciphertext);
+            }
+        }
+
+        return key;
     };
 
     return (<>
